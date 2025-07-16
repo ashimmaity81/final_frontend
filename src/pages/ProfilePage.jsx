@@ -26,6 +26,15 @@ const ProfilePage = () => {
         //...
     };
 
+    const handleDPUpload = async (e) => {
+        console.log(e.target.files);
+        const formData = new FormData();
+        formData.append("displayPicture", e.target.files[0]);
+
+        const resp = await axiosInstance.put("/users/display-picture", formData);
+        console.log(resp);
+    };
+
     useEffect(() => {
         getUserDetails();
     }, []);
@@ -82,6 +91,13 @@ const ProfilePage = () => {
                         </div>
                     </form>
                 )}
+                <div>
+                    <input
+                        type="file"
+                        onChange={handleDPUpload}
+                        className="py-1 px-2 border-1 border-gray-400 rounded-md"
+                    />
+                </div>
             </div>
         </div>
     );
