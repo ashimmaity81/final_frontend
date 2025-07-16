@@ -1,20 +1,26 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAppContext } from "../contexts/appContext";
 import { axiosInstance } from "../axios/axiosInstance";
+import { ErrorToast, SuccessToast } from "../utils/toastHelper";
 
 const Navbar = () => {
     const { user = {} } = useAppContext();
+    const navigate = useNavigate();
 
     const { isAuthenticated } = user;
 
     const handleLogout = async () => {
         try {
             await axiosInstance.get("/auth/logout");
-            //todo
+            SuccessToast("Logout successful!");
             window.location.reload();
         } catch (err) {
-            // todo
+            ErrorToast(err.message);
         }
+    };
+
+    const handleOpenProfilePage = () => {
+        navigate("/profile");
     };
 
     return (
@@ -40,7 +46,12 @@ const Navbar = () => {
                         >
                             Logout
                         </button>
-                        <p>{user?.email}</p>
+                        <div
+                            onClick={handleOpenProfilePage}
+                            className="h-10 w-10 rounded-full bg-indigo-900 text-amber-100 text-xl flex items-center justify-center"
+                        >
+                            {user?.email?.substr(0, 1)?.toUpperCase()}
+                        </div>
                     </>
                 )}
             </div>
