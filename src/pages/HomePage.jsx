@@ -8,7 +8,10 @@ import { Footer } from "../components/Footer";
 
 const HomePage = () => {
   return (
-    <div>
+    <div
+      className="max-h-screen overflow-y-auto overscroll-none"
+      onTouchMove={(e) => e.stopPropagation()}
+    >
       <Navbar />
       <div className="min-h-screen bg-emerald-50 text-gray-800 font-sans">
         {/* Header */}
