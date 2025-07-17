@@ -127,28 +127,38 @@ const Feedback = () => {
           </div>
         </div>
 
-        {/* Doctor & Purpose Dropdowns */}
+        {/* Doctor & Purpose */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Doctor Dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Doctor
             </label>
-            <select className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 overflow-y-auto">
-              {doctors.map((doc, index) => (
-                <option key={index} value={doc.name}>
+            <select
+              name="doctor"
+              value={formData.doctor}
+              onChange={handleChange}
+              required
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Select Doctor</option>
+              {doctors.map((doc, idx) => (
+                <option key={idx} value={doc.name}>
                   {doc.name} ({doc.specialization})
                 </option>
               ))}
             </select>
           </div>
-
-          {/* Purpose Dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Purpose
             </label>
-            <select className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400">
+            <select
+              name="purpose"
+              value={formData.purpose}
+              onChange={handleChange}
+              required
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            >
               <option value="">Select Purpose</option>
               <option value="appointment">Appointment</option>
               <option value="feedback">Feedback</option>
