@@ -77,6 +77,7 @@ const Feedback = () => {
                 Doctor
               </label>
               <select className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 overflow-y-auto">
+                <option value="">Select Doctor</option>
                 {doctors.map((doc, index) => (
                   <option key={index} value={doc.name}>
                     {doc.name} ({doc.specialization})
