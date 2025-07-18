@@ -13,13 +13,20 @@ const Feedback = () => {
     message: "",
   });
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null); // Start as null
   const [loading, setLoading] = useState(false);
 
   const fetchUserDetails = async () => {
     try {
       const resp = await axiosInstance.get("/users/details");
-      const userData = resp.data.data.user;
+
+      const userData = resp?.data?.data?.user;
+
+      if (!userData) {
+        ErrorToast("User data not found.");
+        return;
+      }
+
       setUser(userData);
       setFormData((prev) => ({
         ...prev,
@@ -28,6 +35,7 @@ const Feedback = () => {
         gender: userData.gender || "male",
       }));
     } catch (err) {
+      console.error("Fetch error:", err);
       ErrorToast("Failed to load profile data.");
     }
   };
@@ -48,11 +56,11 @@ const Feedback = () => {
       const resp = await axiosInstance.post("/feedback/submit", formData);
       SuccessToast(resp.data.message);
 
-      // Reset form but keep profile name/email/gender
+      // Reset form, keeping profile info
       setFormData({
-        name: user.name || "",
-        email: user.email || "",
-        gender: user.gender || "male",
+        name: user?.name || "",
+        email: user?.email || "",
+        gender: user?.gender || "male",
         doctor: "",
         purpose: "",
         message: "",
@@ -76,10 +84,14 @@ const Feedback = () => {
         {/* Name & Email */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
               Name
             </label>
             <input
+              id="name"
               type="text"
               name="name"
               value={formData.name}
@@ -87,13 +99,18 @@ const Feedback = () => {
               placeholder="Your Name"
               required
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              disabled={loading}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
+              id="email"
               type="email"
               name="email"
               value={formData.email}
@@ -101,6 +118,7 @@ const Feedback = () => {
               placeholder="Your Email"
               required
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              disabled={loading}
             />
           </div>
         </div>
@@ -120,6 +138,7 @@ const Feedback = () => {
                   checked={formData.gender === g}
                   onChange={handleChange}
                   className="accent-indigo-600"
+                  disabled={loading}
                 />
                 <span>{g.charAt(0).toUpperCase() + g.slice(1)}</span>
               </label>
@@ -130,15 +149,20 @@ const Feedback = () => {
         {/* Doctor & Purpose */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="doctor"
+              className="block text-sm font-medium text-gray-700"
+            >
               Doctor
             </label>
             <select
+              id="doctor"
               name="doctor"
               value={formData.doctor}
               onChange={handleChange}
               required
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              disabled={loading}
             >
               <option value="">Select Doctor</option>
               {doctors.map((doc, idx) => (
@@ -149,15 +173,20 @@ const Feedback = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="purpose"
+              className="block text-sm font-medium text-gray-700"
+            >
               Purpose
             </label>
             <select
+              id="purpose"
               name="purpose"
               value={formData.purpose}
               onChange={handleChange}
               required
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              disabled={loading}
             >
               <option value="">Select Purpose</option>
               <option value="appointment">Appointment</option>
@@ -168,10 +197,14 @@ const Feedback = () => {
 
         {/* Feedback / Message */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="message"
+            className="block text-sm font-medium text-gray-700"
+          >
             Your Feedback / Request
           </label>
           <textarea
+            id="message"
             name="message"
             rows="4"
             value={formData.message}
@@ -179,6 +212,7 @@ const Feedback = () => {
             required
             placeholder="Share your experience..."
             className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            disabled={loading}
           ></textarea>
         </div>
 

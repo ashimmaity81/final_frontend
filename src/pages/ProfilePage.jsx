@@ -16,11 +16,16 @@ const ProfilePage = () => {
       setLoadingProfile(true);
       const resp = await axiosInstance.get("/users/details");
       const user = resp.data.data.user;
-      setUserDetails(user);
-      setName(user.name || "");
-      setGender(user.gender || "");
+      if (user) {
+        setUserDetails(user);
+        setName(user.name || "");
+        setGender(user.gender || "");
+      } else {
+        setUserDetails({});
+      }
     } catch (err) {
       ErrorToast(`${err.response?.data?.message || err.message}`);
+      setUserDetails({});
     } finally {
       setTimeout(() => setLoadingProfile(false), 3000);
     }
@@ -79,7 +84,7 @@ const ProfilePage = () => {
             <div className="flex flex-col">
               <label className="text-sm text-gray-600 mb-1">Email</label>
               <input
-                value={userDetails.email || ""}
+                value={userDetails?.email || ""}
                 type="text"
                 name="email"
                 className="py-2 px-3 rounded-md border border-gray-300 bg-gray-200 text-gray-700 cursor-not-allowed"
@@ -90,7 +95,7 @@ const ProfilePage = () => {
             <div className="flex flex-col">
               <label className="text-sm text-gray-600 mb-1">Role</label>
               <p className="px-3 py-2 bg-lime-200 text-indigo-800 font-medium rounded-md w-fit">
-                {userDetails.role}
+                {userDetails?.role || ""}
               </p>
             </div>
 

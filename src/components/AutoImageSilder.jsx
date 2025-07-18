@@ -29,4 +29,4 @@ const AutoImageSlider = () => {
   );
 };
 
-export {AutoImageSlider};
+export { AutoImageSlider };
