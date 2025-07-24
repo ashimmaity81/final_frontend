@@ -25,30 +25,30 @@ const branches = [
     specialties: "Full-service Multispeciality Unit",
   },
   {
-    name: "South Hub",
-    address: "56 Garden Park, Kharagpur",
+    name: "North Hub",
+    address: "52 Garden Park, Kharagpur",
     specialties: "Full-service Multispeciality Unit",
   },
 ];
 
 const Branches = () => {
   return (
-    <div>
+    <div className="p-6 bg-white max-w-6xl mx-auto rounded-3xl shadow-lg border border-emerald-200 mt-5 mb-5">
       {/* Branches Section */}
-      <section className="p-6 max-w-5xl mx-auto mt-8">
-        <h2 className="text-3xl font-semibold text-indigo-900 mb-4 text-center">
+      <section>
+        <h2 className="text-3xl font-semibold text-indigo-900 mb-6 text-center">
           Our Clinic Branches
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
           {branches.map((branch, idx) => (
             <div
               key={idx}
-              className="bg-white shadow-md rounded-lg p-4 border border-gray-200"
+              className="border border-emerald-300 p-4 rounded-lg hover:shadow-lg transition bg-emerald-100"
             >
-              <h3 className="text-lg font-semibold text-indigo-900">
+              <h3 className="text-xl font-medium text-indigo-900 mb-2">
                 {branch.name}
               </h3>
-              <p className="text-sm text-gray-700">{branch.address}</p>
+              <p className="text-sm text-gray-700 mb-1">{branch.address}</p>
               <p className="text-sm text-emerald-700">{branch.specialties}</p>
             </div>
           ))}

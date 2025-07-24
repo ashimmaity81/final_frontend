@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { axiosInstance } from "../axios/axiosInstance";
 import { ErrorToast, SuccessToast } from "../utils/toastHelper";
-import { doctors } from "../components/Doctors";
 
 const Feedback = () => {
   const [formData, setFormData] = useState({
@@ -13,13 +12,13 @@ const Feedback = () => {
     message: "",
   });
 
-  const [user, setUser] = useState(null); // Start as null
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [doctors, setDoctors] = useState([]);
 
   const fetchUserDetails = async () => {
     try {
       const resp = await axiosInstance.get("/users/details");
-
       const userData = resp?.data?.data?.user;
 
       if (!userData) {
@@ -40,8 +39,20 @@ const Feedback = () => {
     }
   };
 
+  const fetchDoctors = async () => {
+    try {
+      const resp = await axiosInstance.get("/users/admins");
+      const adminList = resp.data?.data?.admins || [];
+      setDoctors(adminList);
+    } catch (err) {
+      console.error("Failed to load doctors", err);
+      ErrorToast("Unable to fetch doctors list.");
+    }
+  };
+
   useEffect(() => {
     fetchUserDetails();
+    fetchDoctors();
   }, []);
 
   const handleChange = (e) => {
@@ -55,8 +66,6 @@ const Feedback = () => {
     try {
       const resp = await axiosInstance.post("/feedback/submit", formData);
       SuccessToast(resp.data.message);
-
-      // Reset form, keeping profile info
       setFormData({
         name: user?.name || "",
         email: user?.email || "",
@@ -73,8 +82,8 @@ const Feedback = () => {
   };
 
   return (
-    <section className="p-6 max-w-5xl mx-auto mt-8">
-      <h2 className="text-3xl font-semibold text-indigo-900 mb-4">
+    <section className="p-6 bg-white max-w-6xl mx-auto rounded-3xl shadow-lg border border-emerald-200 mt-5 mb-5">
+      <h2 className="text-3xl font-semibold text-indigo-900 mb-6 text-center">
         Patient Feedback / Request
       </h2>
       <form
@@ -165,11 +174,15 @@ const Feedback = () => {
               disabled={loading}
             >
               <option value="">Select Doctor</option>
-              {doctors.map((doc, idx) => (
-                <option key={idx} value={doc.name}>
-                  {doc.name} ({doc.specialization})
-                </option>
-              ))}
+              {doctors.length === 0 ? (
+                <option disabled>No doctors found</option>
+              ) : (
+                doctors.map((doc) => (
+                  <option key={doc._id} value={doc.name}>
+                    {doc.name} ({doc.specialization || "No specialization"})
+                  </option>
+                ))
+              )}
             </select>
           </div>
           <div>
@@ -195,7 +208,7 @@ const Feedback = () => {
           </div>
         </div>
 
-        {/* Feedback / Message */}
+        {/* Message */}
         <div>
           <label
             htmlFor="message"
@@ -216,7 +229,7 @@ const Feedback = () => {
           ></textarea>
         </div>
 
-        {/* Submit */}
+        {/* Submit Button */}
         <div className="flex justify-center">
           <button
             type="submit"

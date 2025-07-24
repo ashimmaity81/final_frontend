@@ -36,7 +36,7 @@ const Treatments = () => {
   return (
     <div>
       {/* Treatments Section with Images */}
-      <section className="p-6 bg-white max-w-6xl mx-auto rounded-xl shadow-md mt-4">
+      <section className="p-6 bg-white max-w-6xl mx-auto rounded-3xl shadow-lg border border-emerald-200 mt-5 mb-5">
         <h2 className="text-3xl font-semibold text-indigo-900 mb-6 text-center">
           Our Treatments
         </h2>

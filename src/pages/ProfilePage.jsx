@@ -10,6 +10,7 @@ const ProfilePage = () => {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
+  const [role, setRole] = useState(""); // <-- New state for user role
 
   const getUserDetails = async () => {
     try {
@@ -20,6 +21,7 @@ const ProfilePage = () => {
         setUserDetails(user);
         setName(user.name || "");
         setGender(user.gender || "");
+        setRole(user.role || ""); // <-- set role here
       } else {
         setUserDetails({});
       }
@@ -34,11 +36,17 @@ const ProfilePage = () => {
   const handleUpdateUserDetails = async (e) => {
     e.preventDefault();
     try {
-      const resp = await axiosInstance.put("/users/update", {
-        name,
+      // Only send name if user is NOT admin (to prevent name change by admin)
+      const payload = {
         gender,
-      });
+      };
+      if (role !== "admin") {
+        payload.name = name;
+      }
+      const resp = await axiosInstance.put("/users/update", payload);
       setUserDetails(resp.data.data.user);
+      setName(resp.data.data.user.name || "");
+      setGender(resp.data.data.user.gender || "");
       SuccessToast("Profile updated successfully!");
     } catch (err) {
       ErrorToast(`${err.response?.data?.message || err.message}`);
@@ -75,7 +83,7 @@ const ProfilePage = () => {
         ) : (
           <form
             onSubmit={handleUpdateUserDetails}
-            className="bg-white shadow-xl rounded-lg p-6 w-full max-w-xl flex flex-col gap-6"
+            className="bg-white shadow-lg rounded-3xl border border-emerald-200 mt-5 mb-5 p-6 w-full max-w-xl flex flex-col gap-6"
           >
             <h2 className="text-2xl font-semibold text-indigo-900">
               Your Profile
@@ -95,7 +103,7 @@ const ProfilePage = () => {
             <div className="flex flex-col">
               <label className="text-sm text-gray-600 mb-1">Role</label>
               <p className="px-3 py-2 bg-lime-200 text-indigo-800 font-medium rounded-md w-fit">
-                {userDetails?.role || ""}
+                {role}
               </p>
             </div>
 
@@ -107,7 +115,12 @@ const ProfilePage = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your name"
-                className="py-2 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                disabled={role === "admin"}
+                className={`py-2 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 ${
+                  role === "admin"
+                    ? "bg-gray-200 cursor-not-allowed"
+                    : "focus:ring-emerald-400"
+                }`}
               />
             </div>
 

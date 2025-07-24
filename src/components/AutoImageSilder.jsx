@@ -13,18 +13,20 @@ const AutoImageSlider = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 5000); // every 5 seconds
+    }, 4000);
 
     return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div className="p-6 bg-white max-w-6xl mx-auto shadow-md mt-4 overflow-hidden rounded-md">
-      <img
-        src={images[index]}
-        alt={`clinic-${index}`}
-        className="w-full h-[470px] object-cover transition-all duration-500 rounded-b-md cursor-not-allowed"
-      />
+    <div className="bg-white max-w-6xl mx-auto mt-5 mb-5 p-8 rounded-3xl shadow-lg overflow-hidden select-none border border-emerald-200">
+      <div className="relative w-full h-[560px]">
+        <img
+          src={images[index]}
+          alt={`clinic-${index}`}
+          className="w-full h-full object-cover rounded-xl transition-transform duration-700 ease-in-out cursor-not-allowed"
+        />
+      </div>
     </div>
   );
 };
